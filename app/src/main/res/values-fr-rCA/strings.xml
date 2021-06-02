@@ -8,4 +8,8 @@
     <string name="checkboxtext">I\'m a checkbox</string>
     <string name="switchtext">I\'m a switch</string>
     <string name="radiobuttontext">I\'m a radio button</string>
+    <string name="button1">bouton1</string>
+    <string name="button2">bouton2</string>
+    <string name="button3">bouton3</string>
+    <string name="spin_message">drapeau de rotation</string>
 </resources>

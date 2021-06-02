@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -16,57 +19,34 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+    ImageView imgView;
+    Switch sw;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Create Text Views, Edit Text and Compound Buttons.
-        TextView myText = findViewById(R.id.textview);
-        EditText myedit = findViewById(R.id.myedittext);
-        Button btn = findViewById(R.id.mybutton);
-        Switch mySwitch = findViewById(R.id.myswitch);
-        RadioButton myRadioButton = findViewById(R.id.myradiobutton);
-        CheckBox myCheckBox = findViewById(R.id.mycheckbox);
+        imgView = findViewById(R.id.flagview);
+        sw = findViewById(R.id.spin_switch);
 
-        //Image Views and image button instances
-        ImageView myimage = findViewById(R.id.logo_algonquin);
-        ImageButton myImageButton = findViewById(R.id.myimagebutton);
+        sw.setOnCheckedChangeListener((btn, isChecked)-> {
+            if (isChecked)
+            {
+                RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                rotate.setDuration(5000);
+                rotate.setRepeatCount(Animation.INFINITE);
+                rotate.setInterpolator(new LinearInterpolator());
 
-        // On click listener for button clicks
-        btn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-        //On click will invoke the getText() + setText() methods to state your edit text has changed.
-                String editString = myedit.getText().toString();
-                myText.setText("Your edit text has:" + editString);
+                imgView.startAnimation(rotate);
+
+
+            }
+            else{
+                imgView.clearAnimation();
             }
         });
 
-
-// Toast on button click methods
-        myRadioButton.setOnCheckedChangeListener( (RadioButton, isChecked) -> { Toast.makeText(getApplicationContext(), "You clicked on the radio button and it is now:" + isChecked, Toast.LENGTH_SHORT).show();  } );
-        myCheckBox.setOnCheckedChangeListener( (CheckBox, isChecked) -> { Toast.makeText(getApplicationContext(), "You clicked on the check box and it is now:" + isChecked, Toast.LENGTH_LONG).show();  } );
-        mySwitch.setOnCheckedChangeListener( (Switch, isChecked) -> { Toast.makeText(getApplicationContext(), "You clicked on the switch and it is now:" + isChecked, Toast.LENGTH_SHORT).show();  } );
-
-
-        myImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"The width=" + myImageButton.getWidth() + " and height=" + myImageButton.getHeight(), Toast.LENGTH_LONG).show();
-            }
-        }); {
-
-        }
-
-// Default Toast
-Toast.makeText(getApplicationContext(), "Text", Toast.LENGTH_LONG).show();
-
-
-
-
-
-
-
-
     }
+
 }
