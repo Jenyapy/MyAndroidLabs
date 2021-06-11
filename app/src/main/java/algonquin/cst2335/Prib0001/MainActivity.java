@@ -1,52 +1,76 @@
 package algonquin.cst2335.Prib0001;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
-
 public class MainActivity extends AppCompatActivity {
-    ImageView imgView;
-    Switch sw;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Create Text Views, Edit Text and Compound Buttons.
-        imgView = findViewById(R.id.flagview);
-        sw = findViewById(R.id.spin_switch);
+        Log.w( "MainActivity", "In onCreate() - Loading Widgets" );
 
-        sw.setOnCheckedChangeListener((btn, isChecked)-> {
-            if (isChecked)
-            {
-                RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                rotate.setDuration(5000);
-                rotate.setRepeatCount(Animation.INFINITE);
-                rotate.setInterpolator(new LinearInterpolator());
+        Button loginBtn = findViewById(R.id.loginButton);
+        Log.w("MainActivity", "In onCreate() - Loading Widgets" );
 
-                imgView.startAnimation(rotate);
+        loginBtn.setOnClickListener( clk -> {
+            EditText et = findViewById(R.id.inputEditText);
+            Intent nextPage = new Intent(MainActivity.this, SecondPage.class);
+
+            nextPage.putExtra("EmailAddress", et.getText().toString());
+            startActivity( nextPage );
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult( cameraIntent, 3456);
 
 
-            }
-            else{
-                imgView.clearAnimation();
-            }
+
+
+
         });
 
+
+
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.w("MainActivity", "In onStart() - The application is now visible on screen" );
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.w("MainActivity", "In onResume() - The application is now responding to user input" );
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.w("MainActivity", "In onPause() - The application no longer responds to user input" );
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.w("MainActivity", "In onStop() - The application is no longer visible" );
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.w("MainActivity", "In onDestroy() - Any memory used by the application is now freed" );
     }
 
 }
