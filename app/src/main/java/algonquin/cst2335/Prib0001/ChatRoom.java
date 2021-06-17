@@ -17,32 +17,37 @@ public class ChatRoom extends AppCompatActivity {
 
         setContentView(R.layout.chatlayout);
         chatList = findViewById(R.id.myRecycler);
-        chatList.setAdapter(new RecyclerView.Adapter()
+        chatList.setAdapter(new ChatAdapter() );
 
-chatList.setAdapter(new MyChatAdapter()));
-
-        }
-
-private class MyChatAdapter extends RecyclerView.Adapter{
-
-
-            @Override
-            public RecyclerView.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
-                return null;
-            }
-
-            @Override
-            public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
-            }
-
-            @Override
-            public int getItemCount() {
-                return 0;
-            }
 
     }
-    private class ChatMessage
+
+
+   private class ChatAdapter extends RecyclerView.Adapter{
+
+
+
+       @Override
+       public RecyclerView.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
+           return null;
+       }
+
+       @Override
+       public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+       }
+
+       @Override
+       public int getItemCount() {
+           return 0;
+       }
+   }
+
+
+
+
+
+   private class ChatMessage
     {
     String message;
     int sendOrReceive;
