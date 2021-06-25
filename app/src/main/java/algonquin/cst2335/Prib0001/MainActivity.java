@@ -44,10 +44,14 @@ public class MainActivity extends AppCompatActivity {
         Button btn = findViewById(R.id.button);
 
 
+
         btn.setOnClickListener(clk -> {
             String password = et.getText().toString();
 
-            checkPasswordComplexity(password);
+            if(checkPasswordComplexity(password))
+                tv.setText("Your password is complex enough");
+            else
+                tv.setText("You shall not pass!");
         });
     }
 
@@ -78,8 +82,10 @@ public class MainActivity extends AppCompatActivity {
 
         } else if (!foundNumber) {
         } else if (!foundSpecial) {
+
         } else
             return true;
+        Toast.makeText(MainActivity.this, "your password meets the requirements", Toast.LENGTH_LONG).show();
         return true;
 
 
