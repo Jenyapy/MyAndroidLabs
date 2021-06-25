@@ -15,58 +15,109 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * @author jenya
+ * @version 1.0
+ * This page provides functionality for the avtivity_main.xml
+ */
 public class MainActivity extends AppCompatActivity {
-
+    /**
+     * this holds the texts at centre of screen
+     */
+    private TextView tv = null;
+    /**
+     * this holds the edit text below the text view
+     */
+    private EditText et = null;
+    /**
+     * this holds the login button below the edit text
+     */
+    private Button btn = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Create Text Views, Edit Text and Compound Buttons.
-        TextView myText = findViewById(R.id.textview);
-        EditText myedit = findViewById(R.id.myedittext);
-        Button btn = findViewById(R.id.mybutton);
-        Switch mySwitch = findViewById(R.id.myswitch);
-        RadioButton myRadioButton = findViewById(R.id.myradiobutton);
-        CheckBox myCheckBox = findViewById(R.id.mycheckbox);
+        TextView tv = findViewById(R.id.logintextview);
+        EditText et = findViewById(R.id.editText);
 
-        //Image Views and image button instances
-        ImageView myimage = findViewById(R.id.logo_algonquin);
-        ImageButton myImageButton = findViewById(R.id.myimagebutton);
+        Button btn = findViewById(R.id.button);
 
-        // On click listener for button clicks
-        btn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-        //On click will invoke the getText() + setText() methods to state your edit text has changed.
-                String editString = myedit.getText().toString();
-                myText.setText("Your edit text has:" + editString);
-            }
+
+
+        btn.setOnClickListener(clk -> {
+            String password = et.getText().toString();
+
+            if(checkPasswordComplexity(password))
+                tv.setText("Your password is complex enough");
+            else
+                tv.setText("You shall not pass!");
         });
+    }
+
+    /**
+     * This function checks for the correct password format
+     *
+     * @param password string to be checked.
+     * @return returns true if password matches parameters returns false if complexity does not match parameters.
+     */
 
 
-// Toast on button click methods
-        myRadioButton.setOnCheckedChangeListener( (RadioButton, isChecked) -> { Toast.makeText(getApplicationContext(), "You clicked on the radio button and it is now:" + isChecked, Toast.LENGTH_SHORT).show();  } );
-        myCheckBox.setOnCheckedChangeListener( (CheckBox, isChecked) -> { Toast.makeText(getApplicationContext(), "You clicked on the check box and it is now:" + isChecked, Toast.LENGTH_LONG).show();  } );
-        mySwitch.setOnCheckedChangeListener( (Switch, isChecked) -> { Toast.makeText(getApplicationContext(), "You clicked on the switch and it is now:" + isChecked, Toast.LENGTH_SHORT).show();  } );
+    private boolean checkPasswordComplexity(String password) {
+
+        boolean foundUpperCase;
+        boolean foundLowerCase;
+        boolean foundNumber;
+        boolean foundSpecial;
+
+        foundUpperCase = foundLowerCase = foundNumber = foundSpecial = false;
 
 
-        myImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"The width=" + myImageButton.getWidth() + " and height=" + myImageButton.getHeight(), Toast.LENGTH_LONG).show();
-            }
-        }); {
+        if (!foundUpperCase) {
+            Toast.makeText(MainActivity.this, "password missing upper case character.", Toast.LENGTH_LONG).show();
+            return false;
+        } else if (!foundLowerCase) {
+            Toast.makeText(MainActivity.this, "password missing lower case character.", Toast.LENGTH_LONG).show();
+            return false;
 
-        }
+        } else if (!foundNumber) {
+        } else if (!foundSpecial) {
 
-// Default Toast
-Toast.makeText(getApplicationContext(), "Text", Toast.LENGTH_LONG).show();
-
-
-
-
-
-
+        } else
+            return true;
+        Toast.makeText(MainActivity.this, "your password meets the requirements", Toast.LENGTH_LONG).show();
+        return true;
 
 
     }
+
+    /**
+     *
+     * @param c checks for special characters.
+     * @return returns true if special characters are found and false if not found.
+     */
+
+        boolean isSpecialCharacter ( char c)
+
+        {
+            switch(c)
+            {
+                case '#':
+                case '?':
+                case '*':
+                case '!':
+                case '@':
+                case '$':
+                case '%':
+                case'^':
+                    return true;
+                default:
+                    return false;
+            }
+
+        }
+
 }
+
+
+
