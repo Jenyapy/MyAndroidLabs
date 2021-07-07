@@ -30,6 +30,8 @@ chatList.setAdapter(adt);
     chatList.setLayoutManager(new LinearLayoutManager(this));
 
 
+MyOpenHelper opener = new MyOpenHelper();
+
 
 
     }
