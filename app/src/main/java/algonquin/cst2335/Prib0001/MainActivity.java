@@ -3,6 +3,7 @@ package algonquin.cst2335.Prib0001;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -24,6 +26,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -62,6 +67,11 @@ public class MainActivity extends AppCompatActivity {
 
         forecastBtn.setOnClickListener(clk -> {
 
+            AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Getting Forecast")
+                    .setMessage("We're calling people in" + cityText + "to look outside their windows and tell us what's the weather like over there.")
+                    .setView(new ProgressBar(MainActivity.this))
+                    .show();
 
             Executor newThread = Executors.newSingleThreadExecutor();
 //this thread will run on a different cpu
@@ -77,10 +87,13 @@ public class MainActivity extends AppCompatActivity {
 
                             + "&appid=7e943c97096a9784391a981c4d878b22&Units=Metric";
 
-
                     URL url = new URL(serverURL);
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                     InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+
+
+
+
 
 
 
@@ -105,10 +118,47 @@ public class MainActivity extends AppCompatActivity {
                    double currentTemp = main.getDouble("temp");
                    double min = main.getDouble("temp_min");
                    double max = main.getDouble("temp_max");
-                    int humidity = main.getInt("humidity");
+                    String humidity = main.getString("humidity");
                     String description = main.getString("description");
                     String iconName = obj0.getString("icon");
 
+
+
+                    XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+                    factory.setNamespaceAware(false);
+                    XmlPullParser xpp = factory.newPullParser();
+                    xpp.setInput(in, "UTF-8");
+
+                    while(xpp.next() != XmlPullParser.END_DOCUMENT) {
+                        switch (xpp.getEventType()) {
+                            case XmlPullParser.START_TAG:
+                                if(xpp.getName().equals("temperature"))
+                                {
+                                    xpp.getAttributeValue(null,  "value");
+                                    xpp.getAttributeValue(null, "min");
+                                    xpp.getAttributeValue(null, "max");
+                                }
+
+                                else if(xpp.getName().equals("weather"))
+                                {
+                                    xpp.getAttributeValue(null,"value");
+                                    xpp.getAttributeValue(null,"icon");
+                                }
+
+                                else if(xpp.getName().equals("humidity"))
+                                {
+                                    humidity = xpp.getAttributeValue(null, "value");
+                                }
+                                break;
+
+                            case XmlPullParser.END_TAG:
+                                break;
+
+                            case XmlPullParser.TEXT:
+
+                                break;
+                        }
+                    }
 
 
                     //Icon view
@@ -123,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                         connection.connect();
                         int responseCode = connection.getResponseCode();
-                        if (responseCode == 200) {
+                        if (responseCode == 100) {
                             image = BitmapFactory.decodeStream(connection.getInputStream());
                             image.compress(Bitmap.CompressFormat.PNG, 100, openFileOutput(iconName+ ".png", Activity.MODE_PRIVATE));
 
@@ -136,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
 
                         try{
                             fout = openFileOutput(image + "png", Context.MODE_PRIVATE);
-                            image.compress(Bitmap.CompressFormat.PNG, 200, fout );
+                            image.compress(Bitmap.CompressFormat.PNG, 100, fout );
                             fout.flush();
                             fout.close();
                         } catch (FileNotFoundException e) {
@@ -180,9 +230,9 @@ public class MainActivity extends AppCompatActivity {
                     iv.setVisibility(View.VISIBLE);
                     });
 
+                dialog.hide();
 
-
-                } catch (IOException | JSONException e) {
+                } catch (IOException | JSONException | XmlPullParserException e) {
                     e.printStackTrace();
                 }
             });
