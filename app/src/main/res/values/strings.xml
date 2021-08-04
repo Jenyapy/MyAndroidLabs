@@ -7,4 +7,6 @@
     <string name="checkboxtext">Click if you like pizza</string>
     <string name="switchtext">Do you like coffee?</string>
     <string name="radiobuttontext">Do you like sushi?</string>
+    <string name="open" />
+    <string name="close" />
 </resources>

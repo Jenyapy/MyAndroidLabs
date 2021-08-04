@@ -1,6 +1,11 @@
 package algonquin.cst2335.Prib0001;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,6 +14,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -21,6 +29,8 @@ import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,6 +65,62 @@ import java.util.stream.Collectors;
 public class MainActivity extends AppCompatActivity {
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_actions, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected( MenuItem item) {
+        float oldSize = 14;
+        TextView currentTemp = findViewById(R.id.currentTemp);
+        TextView maxTemp = findViewById(R.id.maxView);
+        TextView minTemp = findViewById(R.id.minView);
+        TextView humidity = findViewById(R.id.humidityView);
+        TextView description = findViewById(R.id.humidityView);
+        ImageView icon = findViewById(R.id.icon);
+        EditText cityField = findViewById(R.id.cityTextField);
+        switch(item.getItemId())
+        {
+            case R.id.hide_views:
+                currentTemp.setVisibility(View.INVISIBLE);
+                maxTemp.setVisibility(View.INVISIBLE);
+                minTemp.setVisibility(View.INVISIBLE);
+                humidity.setVisibility(View.INVISIBLE);
+                description.setVisibility(View.INVISIBLE);
+                icon.setVisibility(View.INVISIBLE);
+                cityField.setText(""); //clears name of city
+                break;
+
+            case R.id.id_increase:
+                oldSize++;
+                currentTemp.setTextSize(oldSize);
+                minTemp.setTextSize(oldSize);
+                maxTemp.setTextSize(oldSize);
+                humidity.setTextSize(oldSize);
+                description.setTextSize(oldSize);
+                cityField.setTextSize(oldSize);
+                break;
+
+            case R.id.id_decrease:
+                oldSize = Float.max(oldSize-1,5);
+                currentTemp.setTextSize(oldSize);
+                minTemp.setTextSize(oldSize);
+                maxTemp.setTextSize(oldSize);
+                humidity.setTextSize(oldSize);
+                description.setTextSize(oldSize);
+                cityField.setTextSize(oldSize);
+                break;
+
+            case 5:
+                String cityName = item.getTitle().toString();
+                runForeCast(cityName);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +129,23 @@ public class MainActivity extends AppCompatActivity {
         //Create Text Views, Edit Text and Compound Buttons.
         Button forecastBtn = findViewById(R.id.forecastButton);
         EditText cityText = findViewById(R.id.cityTextField);
+        Toolbar myToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, myToolbar, R.string.open, R.string.close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView nav = findViewById(R.id.popout_menu);
+        nav.setNavigationItemSelectedListener((item) -> {
+
+            onOptionsItemSelected(item);
+
+drawer.closeDrawer(GravityCompat.START);
+
+            return false;
+        });
 
 
         forecastBtn.setOnClickListener(clk -> {
@@ -80,6 +163,8 @@ public class MainActivity extends AppCompatActivity {
 
                 try { // try block on different cpu thread
                     String cityName = cityText.getText().toString();
+                    myToolbar.getMenu().add( 0, 5, 0, cityName).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                    runForeCast(cityName);
                     // connecting to server URL
 
                     String serverURL = "https://api.openweathermap.org/data/2.5/weather?q="
@@ -248,6 +333,10 @@ public class MainActivity extends AppCompatActivity {
          * @return returns true if password matches parameters returns false if complexity does not match parameters.
          */
 
+
+    }
+
+    private void runForeCast(String cityName) {
 
     }
 
